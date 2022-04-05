@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+    <category>
+        <pattern>*</pattern>
+        <template>
+            <condition name = "started">
+                <li value = "unknown">
+                    Hello, I am a bot programmed to help people find their future careers. What is your name?<think><set name = "topic">name</set></think>
+                </li>
+                <li value = "yes">
+                    Sorry, I don't understand that response.
+                </li>
+            </condition>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>TOPIC</pattern>
+        <template><get name = "topic"></get></template>
+    </category>
+    
+<topic name = "name">
+    <category>
+      <pattern>I AM *</pattern>
+      <template>
+        Nice to meet you <set name ="username"><star/></set>! Do you need any help selecting a career path?
+        <think>
+            <set name = "topic">career</set>
+            <set name = "started">yes</set>
+        </think>
+        <button>
+            <text>Yes that sounds nice</text>
+            <postback>I WOULD LIKE SOME HELP FINDING A CAREER</postback>
+        </button>
+        <button>
+            <text>No thank you</text>
+            <postback>I WOULD NOT LIKE SOME HELP FINDING A CAREER</postback>
+        </button>
+      </template>
+    </category>
+    
+    <category>
+      <pattern>IM *</pattern>
+      <template>
+          <srai>I AM <star/></srai>
+      </template>
+    </category>
+    
+    <category>
+      <pattern>* CALL ME *</pattern>
+      <template>
+          <srai>I AM <star index = "2" /></srai>
+      </template>
+    </category>
+    
+    <category>
+      <pattern>* IS *</pattern>
+      <template>
+          <srai>I AM <star index = "2" /></srai>
+      </template>
+    </category>
+    
+    <category>
+      <pattern>*</pattern>
+      <template>
+          <srai>I AM <star/></srai>
+      </template>
+    </category>
+</topic>
+  
+  <category>
+      <pattern>I WOULD NOT LIKE SOME HELP FINDING A CAREER</pattern>
+      <template>If you ever need me, I'll be right here.</template>
+      <button>
+          <text>I need help now</text>
+          <postback>I WOULD LIKE SOME HELP FINDING A CAREER</postback>
+      </button>
+  </category>
+  
+  <category>
+      <pattern>I WOULD LIKE SOME HELP FINDING A CAREER</pattern>
+      <template>
+          That is great, I happen to be trained to do exactly that. Lets get started, I will ask you a few questions, all you need to do is answer as honestly as possible. Do you think you can do that?
+          <button>
+              <text>Of course</text>
+              <postback>CAREER QUESTION 1</postback>
+          </button>
+          <button>
+              <text>No, thank you</text>
+              <postback>I WOULD NOT LIKE SOME HELP FINDING A CAREER</postback>
+          </button>
+      </template>
+  </category>
+  
+    <category>
+        <pattern>CAREER QUESTION 1</pattern>
+        <template>
+            Ok, here we go!
+            <delay>1</delay>
+            Do you enjoy math?
+            <button>
+                <text>Yes</text>
+                <postback>CAREER QUESTION 2 1</postback>
+            </button>
+            <button>
+                <text>No</text>
+                <postback>CAREER QUESTION 2 0</postback>
+            </button>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>CAREER QUESTION 2 *</pattern>
+        <template>
+            <think><set name = "math"><star/></set></think>
+            Would you like to work on websites?
+            <button>
+                <text>Yes</text>
+                <condition name = "math">
+                    <li value = "0"><postback>CAREER QUESTION YES WEB NO MATH</postback></li>
+                    <li value = "1"><postback>CAREER QUESTION YES WEB YES MATH</postback></li>
+                </condition>
+            </button>
+            <button>
+                <text>No</text>
+                <condition name = "math">
+                    <li value = "0"><postback>CAREER QUESTION NO WEB NO MATH</postback></li>
+                    <li value = "1"><postback>CAREER QUESTION NO WEB YES MATH</postback></li>
+                </condition>
+            </button>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>CAREER QUESTION YES WEB NO MATH</pattern>
+        <template>Are you more interested in user experience or programming?
+            <button>
+                <text>Experience</text>
+                <postback>CAREER FOUND Web Designer</postback>
+            </button>
+            <button>
+                <text>Programming</text>
+                <postback>CAREER FOUND Front-End Web Developer</postback>
+            </button>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>CAREER QUESTION YES WEB YES MATH</pattern>
+        <template>Are you an adept programmer?
+            <button>
+                <text>I sure am!</text>
+                <postback>CAREER FOUND Back-End Web Developer</postback>
+            </button>
+            <button>
+                <text>I'd rather not program much</text>
+                <postback>CAREER FOUND IT Architect</postback>
+            </button>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>CAREER QUESTION NO WEB NO MATH</pattern>
+        <template> Are you an adept programmer?
+            <button>
+                <text>I sure am!</text>
+                <postback>CAREER FOUND Software Developer</postback>
+            </button>
+            <button>
+                <text>I'd rather not program much</text>
+                <postback>CAREER FOUND Network Administrator</postback>
+            </button>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>CAREER QUESTION NO WEB YES MATH</pattern>
+        <template> Do you like analyzing data?
+            <button>
+                <text>I sure do!</text>
+                <postback>CAREER FOUND Data Scientist</postback>
+            </button>
+            <button>
+                <text>I'd rather not analyze data much</text>
+                <postback>CAREER FOUND Software Developer</postback>
+            </button>
+        </template>
+    </category>
+    
+    <category>
+        <pattern>CAREER FOUND *</pattern>
+        <template>
+            Those are all the questions we had for you! Crunching the numbers...
+            <delay>2</delay>
+            We think that being a <star/> would be a great career for you, <get name = "username" />! Thanks for participating, would you like to try again?
+            <button>
+                <text>Sure</text>
+                <postback>CAREER QUESTION 1</postback>
+            </button>
+        </template>
+    </category>
+</aiml>
